@@ -254,7 +254,22 @@ export default function AuthScreen() {
         navigate('/dashboard');
       }
     } catch (err: any) {
-      setError(err.message || "Lỗi đăng nhập với tư cách khách.");
+      if (err?.code === 'auth/api-key-not-valid' || err?.message?.includes('auth/api-key-not-valid')) {
+        const fallbackRole = (adminKey && adminKey === import.meta.env.VITE_ADMIN_KEY) ? "teacher" : "student";
+        if (fallbackRole === "teacher") sessionStorage.setItem('adminToken', 'true');
+        else sessionStorage.removeItem('adminToken');
+        
+        const { store } = await import('../lib/store');
+        const mockUser = { uid: "local_anon_" + Math.random().toString(36).substr(2, 9), isAnonymous: true, email: "anonymous@local" };
+        await store.setFirebaseUser(mockUser);
+        if (fallbackRole === "teacher") {
+          navigate('/teacher');
+        } else {
+          navigate('/dashboard');
+        }
+      } else {
+        setError(err.message || "Lỗi đăng nhập với tư cách khách.");
+      }
     } finally {
       setIsLoading(false);
       isExecutingAuth.current = false;

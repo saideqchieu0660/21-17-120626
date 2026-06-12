@@ -511,8 +511,12 @@ export const store = {
                 });
             });
         }
-    } catch (e) {
-        console.error("Failed to hydrate cards state from Firebase:", e);
+    } catch (e: any) {
+        if (e?.message?.includes('client is offline')) {
+            console.warn("Firebase client is offline: using local state.");
+        } else {
+            console.error("Failed to hydrate cards state from Firebase:", e);
+        }
     }
     syncLocalUserDecks();
     // Kích hoạt đồng bộ các thay đổi offline tích lũy của user nếu có

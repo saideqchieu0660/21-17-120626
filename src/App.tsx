@@ -667,7 +667,11 @@ function Layout({ children }: { children: React.ReactNode }) {
              import("firebase/auth").then(({ signInAnonymously, setPersistence, browserSessionPersistence }) => {
                 setPersistence(auth, browserSessionPersistence).then(() => {
                    signInAnonymously(auth).catch(e => {
-                      console.error("Anonymous login error", e);
+                      if (e?.code === 'auth/api-key-not-valid' || e?.message?.includes('auth/api-key-not-valid') || e?.message?.includes('DUMMY_KEY_FOR_INIT')) {
+                         console.warn("Firebase not configured: using local anonymous user.");
+                      } else {
+                         console.error("Anonymous login error", e);
+                      }
                       // Fallback to local anonymous user if Firebase fails (missing API key)
                       const mockUser = { uid: "local_anon_" + Math.random().toString(36).substr(2, 9), isAnonymous: true, email: "anonymous@local" };
                       store.setFirebaseUser(mockUser).then(() => {
