@@ -40,10 +40,10 @@ export default function TeacherDashboard() {
   const [editingCategory, setEditingCategory] = useState<string | null>(null);
   const [newCategoryName, setNewCategoryName] = useState("");
   const [isSavingCategoryName, setIsSavingCategoryName] = useState(false);
-  const [collapsedCategories, setCollapsedCategories] = useState<Record<string, boolean>>({});
+  const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>({});
   
   const toggleCategory = (subject: string) => {
-    setCollapsedCategories(prev => ({ ...prev, [subject]: !prev[subject] }));
+    setExpandedCategories(prev => ({ ...prev, [subject]: !prev[subject] }));
   };
   
   const [showMoveBulkModal, setShowMoveBulkModal] = useState(false);
@@ -1140,7 +1140,7 @@ export default function TeacherDashboard() {
                                   </div>
                                 ) : (
                                   <div className="flex items-center gap-2">
-                                    <span className="transform transition-transform opacity-70 text-xs" style={{transform: collapsedCategories[subject] ? 'rotate(-90deg)' : 'rotate(0deg)'}}>▼</span>
+                                    <span className="transform transition-transform opacity-70 text-xs" style={{transform: expandedCategories[subject] ? 'rotate(0deg)' : 'rotate(-90deg)'}}>▼</span>
                                     <h4 className="text-xs font-black uppercase tracking-widest text-amber-600 dark:text-amber-500 flex items-center gap-1.5">
                                       📂 {subject} <span className="opacity-60 text-[10px] font-bold font-mono">({subjectDecks.length} bộ)</span>
                                     </h4>
@@ -1163,7 +1163,7 @@ export default function TeacherDashboard() {
                               )}
                             </div>
 
-                            {!collapsedCategories[subject] && (
+                            {expandedCategories[subject] && (
                               <div className="pl-6 text-xs text-stone-850 dark:text-stone-350 leading-relaxed font-sans mt-3">
                                 <div className="markdown-body dark:prose-invert">
                                   <ReactMarkdown>{categoryMarkdownList}</ReactMarkdown>
@@ -1225,7 +1225,7 @@ export default function TeacherDashboard() {
                           ) : (
                             <>
                               <div className="flex items-center gap-2">
-                                <span className="transform transition-transform opacity-70 text-xs" style={{transform: collapsedCategories[subject] ? 'rotate(-90deg)' : 'rotate(0deg)'}}>▼</span>
+                                <span className="transform transition-transform opacity-70 text-xs" style={{transform: expandedCategories[subject] ? 'rotate(0deg)' : 'rotate(-90deg)'}}>▼</span>
                                 <h4 className="text-xs font-black uppercase tracking-widest text-amber-600 dark:text-amber-500 flex items-center gap-1.5">
                                   📂 {subject} <span className="opacity-60 text-[10px] font-bold font-mono">({subjectDecks.length} bộ)</span>
                                 </h4>
@@ -1246,7 +1246,7 @@ export default function TeacherDashboard() {
                           )}
                         </div>
                         
-                        {!collapsedCategories[subject] && subjectDecks.map(deck => (
+                        {expandedCategories[subject] && subjectDecks.map(deck => (
                           <div key={deck.id} className="flex flex-col sm:flex-row justify-between sm:items-center p-3 gap-3 bg-stone-100 dark:bg-zinc-900/60 rounded-xl border border-stone-200/60 dark:border-zinc-800/50 hover:bg-stone-150/40 dark:hover:bg-zinc-850/30 transition-colors">
                             <div className="flex items-start gap-3 flex-1 min-w-[150px]">
                               <input
