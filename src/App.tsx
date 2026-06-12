@@ -1369,6 +1369,7 @@ export default function App() {
           <Routes location={location} key={location.pathname}>
             <Route path="/auth" element={<PageWrapper><AuthScreen /></PageWrapper>} />
             <Route path="/" element={<PageWrapper><StudentDashboard /></PageWrapper>} />
+            <Route path="/dashboard" element={<PageWrapper><StudentDashboard /></PageWrapper>} />
             <Route path="/verify" element={<PageWrapper><VerifyEmailScreen /></PageWrapper>} />
             <Route path="/teacher" element={<PageWrapper><TeacherDashboard /></PageWrapper>} />
             <Route path="/study/:deckId" element={<PageWrapper><StudyRoom /></PageWrapper>} />
@@ -1376,6 +1377,7 @@ export default function App() {
             <Route path="/setup-profile" element={<PageWrapper><SetupProfileScreen /></PageWrapper>} />
             <Route path="/admin/keys" element={<PageWrapper><AdminKeysDashboard /></PageWrapper>} />
             <Route path="/admin/create-cards" element={<PageWrapper><AdminCreateCards /></PageWrapper>} />
+            <Route path="*" element={<PageWrapper><StudentDashboard /></PageWrapper>} />
           </Routes>
         </AnimatePresence>
       </Layout>

@@ -31,15 +31,27 @@ export const SkillTreeGraph = React.memo(function SkillTreeGraph({ decks }: Skil
   const navigate = useNavigate();
   const [selectedNode, setSelectedNode] = useState<NodeData | null>(null);
   const [hoveredNode, setHoveredNode] = useState<NodeData | null>(null);
+  
+  // Nâng cấp: Lọc theo danh mục (Subject filter)
+  const [selectedSubject, setSelectedSubject] = useState<string>("All");
+
+  const uniqueSubjects = React.useMemo(() => {
+     const subs = new Set<string>();
+     decks.forEach(d => subs.add(d.subject || 'Chung'));
+     return Array.from(subs);
+  }, [decks]);
 
   useEffect(() => {
     if (!containerRef.current || decks.length === 0) return;
+
+    // Filter decks based on selected subject
+    const filteredDecks = selectedSubject === "All" ? decks : decks.filter(d => (d.subject || 'Chung') === selectedSubject);
 
     // Calculate node states
     const nodeMap = new Map<string, NodeData>();
     const subjectMap = new Map<string, string[]>();
     
-    decks.forEach(deck => {
+    filteredDecks.forEach(deck => {
       const cards = deck.cards || [];
       const avgMastery = cards.length 
         ? cards.reduce((sum: number, c: any) => sum + c.mastery, 0) / cards.length 
@@ -289,10 +301,23 @@ export const SkillTreeGraph = React.memo(function SkillTreeGraph({ decks }: Skil
         clearTimeout(resizeTimer);
     };
 
-  }, [decks, theme]);
+  }, [decks, theme, selectedSubject]);
 
   return (
     <div className="relative w-full h-[600px] rounded-xl overflow-hidden glass border border-black/10 dark:border-white/10 shadow-inner">
+       <div className="absolute top-4 right-4 z-10 flex items-center gap-3 bg-white/70 dark:bg-black/70 backdrop-blur-md p-2 px-4 rounded-xl shadow-sm border border-stone-200 dark:border-zinc-800">
+          <span className="text-sm font-bold opacity-70">Lọc môn học:</span>
+          <select 
+             value={selectedSubject} 
+             onChange={(e) => setSelectedSubject(e.target.value)}
+             className="bg-transparent border-none text-sm font-bold focus:ring-0 cursor-pointer"
+          >
+             <option value="All">Tất cả</option>
+             {uniqueSubjects.map(sub => (
+                <option key={sub} value={sub}>{sub}</option>
+             ))}
+          </select>
+       </div>
        <div ref={containerRef} className="w-full h-full cursor-grab active:cursor-grabbing" />
        
        {/* TOOLTIP ON HOVER */}

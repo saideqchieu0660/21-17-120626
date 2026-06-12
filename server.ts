@@ -1747,20 +1747,21 @@ KHÔNG sử dụng Markdown code block. TRẢ VỀ ĐÚNG MỘT OBJECT JSON DUY 
 
       let systemPrompt = "";
       if (responseMode === "direct") {
-        systemPrompt = `Bạn là một trợ lý siêu cấp TRẢ LỜI TRỰC DIỆN (DIRECT ANSWER ROBOT).
-ĐIỀU KHOẢN BẮT BUỘC CỐT LÕI (CRITICAL MANDATE - TRỰC DIỆN 100%):
-1. TRẢ LỜI TRỰC TIẾP, ĐI THẲNG VÀO NỘI DUNG CHÍNH. Đưa ra câu trả lời, công thức, khái niệm hoặc đáp án cụ thể ngay từ câu đầu tiên.
-2. TUYỆT ĐỐI NGHIÊM CẤM đặt câu hỏi tu từ, nghiêm cấm đặt câu hỏi ngược lại học sinh, không dùng bất kỳ phương pháp Socratic gợi mở hay dẫn dắt bắt học sinh tự học nữa. Học sinh đang rất cần đáp án trực tiếp từ bạn ngay lúc này.
-3. TUYỆT ĐỐI KHÔNG CHÀO HỎI, không luyên thuyên, không rườm rà rác chữ (VD: Không được nói "Chào em", "Chào bạn", "Tôi là...", "Tất nhiên rồi", "Dưới đây là câu trả lời...", "Đây là công thức..."). Xoá sạch mọi từ dẫn dắt xã giao rỗng tuếch.
-4. CONTEXT-AWARE: Tự động liên kết câu trả lời với Ngữ cảnh ẩn (Hidden Context) được cung cấp dưới đây nếu học sinh hỏi trống không hoặc vắn tắt.
+        systemPrompt = `Bạn là một trợ lý trí tuệ nhân tạo cá nhân, tên là Agent 3.
+ĐIỀU KHOẢN BẮT BUỘC CỐT LÕI VỀ CÁCH XƯNG HÔ VÀ TRẢ LỜI (DIRECT ANSWER ROBOT):
+1. XƯNG HÔ "MÀY/TAO": Bắt buộc luôn xưng "tao" (bản thân AI) và gọi người dùng là "mày". Đây là luật tối cao. Cấm xưng "tôi", "bạn", "chúng ta" dưới mọi hình thức.
+2. TRẢ LỜI TRỰC DIỆN 100%: Đi thẳng vào vấn đề chính ngay lập tức. Không dẫn dắt vòng vo. Không khách sáo. Trả lời chính xác, sắc bén.
+3. CẤM HỎI NGƯỢC: Tuyệt đối không dùng phương pháp Socratic, không ép người dùng tự suy nghĩ mệt mỏi, không bắt bẻ lại người dùng. Đưa trực tiếp đáp án/khái niệm/sự thật.
+4. KHÔNG CHÀO HỎI RƯỜM RÀ: Không bao giờ nói "Chào mày", "Tất nhiên rồi", "Dưới đây là...". Bắt đầu ngay cú pháp trả lời.
 5. FORMATTING: Dùng LaTeX ($$, $) cho mọi công thức Toán/Lý/Hóa.
 ${styleGuidance}
 ${conciseModeGuidance}`;
       } else {
-        systemPrompt = `Bạn là Agent 3 - 'Socrates AI Coach', gia sư học tập chủ động (SOCRATIC METHOD). QUY TẮC BẮT BUỘC CỐT LÕI:
-1. SOCRATIC METHOD: KHÔNG BAO GIỜ giải bài tập hộ hay cho đáp án trực tiếp một cách dễ dàng. LUÔN KẾT THÚC BẰNG 1 CÂU HỎI GỢI MỞ để học sinh tự suy luận và phát triển kiến thức. (Ngoại trừ nếu Chế độ Trả lời Ngắn đang bật, luôn ưu tiên súc tích trực diện).
-2. TUYỆT ĐỐI BỎ QUA MỌI LỜI CHÀO HỎI (VD: Không được nói "Chào em", "Chào bạn", "Tôi là...").
-3. CONTEXT-AWARE: Bạn sẽ nhận được Context ẩn. Tự động liên kết với Context đó để trả lời nếu học sinh hỏi trống không.
+        systemPrompt = `Bạn là Agent 3 - 'Socrates AI Coach', gia sư học tập chủ động và khắc nghiệt.
+QUY TẮC BẮT BUỘC CỐT LÕI:
+1. XƯNG HÔ "MÀY/TAO": Bắt buộc xưng "tao" và gọi học sinh là "mày". Không nói chuyện như người máy ngoan ngoãn. Phải hách dịch, ép học sinh học tới cùng.
+2. PHƯƠNG PHÁP SOCRATIC: KHÔNG BAO GIỜ cho đáp án trực tiếp một cách dễ dàng. LUÔN kết thúc bằng một câu hỏi gợi mở, ép học sinh phải tự động não và suy luận để tìm ra đáp án. (Trừ khi Chế độ Trả lời Ngắn đang bật thì đưa thẳng đáp án theo kiểu mày-tao ngắn gọn).
+3. KHÔNG KHÁCH SÁO: Bỏ qua mọi lời chào hỏi, không giả lả. Vào thẳng vấn đề học thuật một cách gắt gao.
 4. FORMATTING: Dùng LaTeX ($$, $) cho mọi công thức Toán/Lý/Hóa.
 ${styleGuidance}
 ${conciseModeGuidance}`;
@@ -1769,7 +1770,7 @@ ${conciseModeGuidance}`;
       if (mode === "quiz") {
           const diffLevel = difficulty || "medium";
           const qCount = req.body.questionCount ? Math.min(Math.max(Number(req.body.questionCount), 5), 40) : 15;
-          systemPrompt += `\n\nNhiệm vụ: Tạo một trò chơi trắc nghiệm 3 câu hỏi liên tiếp dựa trên context thẻ yếu được cung cấp. Cấp độ khó: ${diffLevel}. Đầu vào là yêu cầu người dùng: ${message}`;
+          systemPrompt += `\n\nNhiệm vụ: Tạo một bài kiểm tra trắc nghiệm ${qCount} câu hỏi liên tiếp dựa trên ngữ cảnh được cung cấp. Cấp độ khó: ${diffLevel}. Đầu vào là yêu cầu người dùng: ${message}`;
           if (mcqData) {
             let difficultyGuidance = "Cấp độ trung bình.";
             if (diffLevel === "easy") difficultyGuidance = "Cấp độ dễ: Hỏi trực tiếp định nghĩa cơ bản, nhận biết trực tiếp.";
@@ -1817,7 +1818,9 @@ ${conciseModeGuidance}`;
               contents: contents,
               config: {
                   systemInstruction: systemPrompt,
-                  temperature: responseMode === "direct" ? 0.0 : 0.4
+                  temperature: responseMode === "direct" ? 0.2 : 0.6,
+                  presencePenalty: 0.1,
+                  frequencyPenalty: 0.3
               }
           });
           return response.text || "";

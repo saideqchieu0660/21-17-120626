@@ -564,6 +564,17 @@ export default function StudentDashboard() {
       });
       unsubDecksRef.current = unsub;
       FirebaseListenerManager.add("StudentDashboard_decks", unsub);
+      
+      // Fallback timeout in case onSnapshot hangs due to offline/permission issues
+      setTimeout(() => {
+         setIsInitialLoading(prev => {
+            if (prev) {
+               console.warn("onSnapshot sets timeout - forcing initial loading to false");
+               return false;
+            }
+            return prev;
+         });
+      }, 3000);
     } catch (e) {
       console.error("Failed to sync sets in real-time:", e);
       setIsInitialLoading(false);
